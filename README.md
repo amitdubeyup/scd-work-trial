@@ -1,5 +1,10 @@
 # SCD Work Trial - Django Implementation ✅ COMPLETE
 
+## 👨‍💻 **Developer**
+**Amit Dubey** - Full Stack Developer  
+🔗 GitHub: [https://github.com/amitdubeyup](https://github.com/amitdubeyup)  
+📧 Connect: Professional software developer specializing in backend systems and database optimization
+
 ## 🎯 **Assignment Successfully Completed**
 
 This project implements a comprehensive **Slowly Changing Dimensions (SCD) abstraction layer** for Django ORM with SQLite, successfully addressing all requirements from the Mercor SCD Work Trial.
@@ -483,6 +488,18 @@ This SCD abstraction successfully transforms complex, error-prone SCD operations
 5. **Production Readiness** with comprehensive testing and documentation
 
 The abstraction eliminates SCD complexity for developers while providing the power and flexibility needed for complex enterprise applications. This represents a significant improvement in developer productivity and code maintainability for any organization using SCD patterns.
+
+---
+
+## 📝 **About the Developer**
+
+This implementation was created by **Amit Dubey**, a software developer with expertise in:
+- Backend systems and database optimization
+- Django and Python development  
+- Performance engineering for large-scale applications
+- API design and system architecture
+
+**GitHub Profile**: [https://github.com/amitdubeyup](https://github.com/amitdubeyup)
 
 ---
 
