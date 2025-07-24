@@ -2,6 +2,8 @@
 
 ## Quick Info
 - **Developer**: Amit Dubey ([GitHub](https://github.com/amitdubeyup))
+- **Contact**: amitdubey8888@gmail.com
+- **Username**: amitdubeyup
 - **Repository**: https://github.com/amitdubeyup/scd-work-trial
 - **Technology**: Django + Python
 - **Database**: SQLite (development)
