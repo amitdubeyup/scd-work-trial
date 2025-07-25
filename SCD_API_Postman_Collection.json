@@ -1,0 +1,654 @@
+{
+  "info": {
+    "name": "SCD Work Trial - API Collection",
+    "description": "Complete API collection for testing Slowly Changing Dimensions (SCD) Django application. This collection includes all endpoints with various parameter combinations for comprehensive testing.",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set base URL if not already set",
+          "if (!pm.environment.get('base_url')) {",
+          "    pm.environment.set('base_url', 'http://localhost:8000');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. System Info & Demo",
+      "item": [
+        {
+          "name": "Root - System Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/",
+              "host": ["{{base_url}}"],
+              "path": ["api", ""]
+            },
+            "description": "Basic info about the SCD implementation and available endpoints"
+          }
+        },
+        {
+          "name": "Demo Queries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/demo/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "demo", ""]
+            },
+            "description": "Demonstrates SCD abstraction with example queries showing old vs new approaches"
+          }
+        }
+      ],
+      "description": "Basic system information and SCD query demonstrations"
+    },
+    {
+      "name": "2. Jobs Management",
+      "item": [
+        {
+          "name": "All Jobs (Latest Versions)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", ""]
+            },
+            "description": "Get all latest version jobs using SCD abstraction"
+          }
+        },
+        {
+          "name": "Jobs by Company - Active",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/company/comp_001/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "company", "comp_001", ""]
+            },
+            "description": "Get all active jobs for company comp_001 (default status filter)"
+          }
+        },
+        {
+          "name": "Jobs by Company - Completed",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/company/comp_001/?status=completed",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "company", "comp_001", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "completed"
+                }
+              ]
+            },
+            "description": "Get all completed jobs for company comp_001"
+          }
+        },
+        {
+          "name": "Jobs by Company - All Statuses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/company/comp_002/?status=extended",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "company", "comp_002", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "extended",
+                  "description": "Options: active, extended, paused, completed, cancelled"
+                }
+              ]
+            },
+            "description": "Get extended jobs for company comp_002"
+          }
+        },
+        {
+          "name": "Jobs by Contractor - Active",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/contractor/cont_001/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "contractor", "cont_001", ""]
+            },
+            "description": "Get all active jobs for contractor cont_001"
+          }
+        },
+        {
+          "name": "Jobs by Contractor - Paused",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/contractor/cont_002/?status=paused",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "contractor", "cont_002", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "paused"
+                }
+              ]
+            },
+            "description": "Get all paused jobs for contractor cont_002"
+          }
+        }
+      ],
+      "description": "Job management endpoints for companies and contractors"
+    },
+    {
+      "name": "3. Time Tracking",
+      "item": [
+        {
+          "name": "Timelogs - Last 30 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/timelogs/contractor/cont_001/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "timelogs", "contractor", "cont_001", ""]
+            },
+            "description": "Get timelogs for contractor cont_001 in the last 30 days (default)"
+          }
+        },
+        {
+          "name": "Timelogs - Last 7 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/timelogs/contractor/cont_001/?days=7",
+              "host": ["{{base_url}}"],
+              "path": ["api", "timelogs", "contractor", "cont_001", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "7"
+                }
+              ]
+            },
+            "description": "Get timelogs for contractor cont_001 in the last 7 days"
+          }
+        },
+        {
+          "name": "Timelogs - Last 60 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/timelogs/contractor/cont_002/?days=60",
+              "host": ["{{base_url}}"],
+              "path": ["api", "timelogs", "contractor", "cont_002", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "60"
+                }
+              ]
+            },
+            "description": "Get timelogs for contractor cont_002 in the last 60 days"
+          }
+        }
+      ],
+      "description": "Time tracking endpoints for contractors"
+    },
+    {
+      "name": "4. Payment Management",
+      "item": [
+        {
+          "name": "Payments - Last 30 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/contractor/cont_001/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "contractor", "cont_001", ""]
+            },
+            "description": "Get payment line items for contractor cont_001 in the last 30 days (default)"
+          }
+        },
+        {
+          "name": "Payments - Last 14 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/contractor/cont_001/?days=14",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "contractor", "cont_001", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "14"
+                }
+              ]
+            },
+            "description": "Get payment line items for contractor cont_001 in the last 14 days"
+          }
+        },
+        {
+          "name": "Payments - Last 90 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/contractor/cont_003/?days=90",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "contractor", "cont_003", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "90"
+                }
+              ]
+            },
+            "description": "Get payment line items for contractor cont_003 in the last 90 days"
+          }
+        }
+      ],
+      "description": "Payment management endpoints for contractors"
+    },
+    {
+      "name": "5. Dashboards & Reports",
+      "item": [
+        {
+          "name": "Contractor Dashboard - 30 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/dashboard/contractor/cont_001/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dashboard", "contractor", "cont_001", ""]
+            },
+            "description": "Comprehensive contractor dashboard for the last 30 days (default)"
+          }
+        },
+        {
+          "name": "Contractor Dashboard - 14 Days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/dashboard/contractor/cont_002/?days=14",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dashboard", "contractor", "cont_002", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "14"
+                }
+              ]
+            },
+            "description": "Comprehensive contractor dashboard for the last 14 days"
+          }
+        },
+        {
+          "name": "Company Report - Current Month",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/report/company/comp_001/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "report", "company", "comp_001", ""]
+            },
+            "description": "Company spending report for current month (default)"
+          }
+        },
+        {
+          "name": "Company Report - November 2023",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/report/company/comp_001/?month=11&year=2023",
+              "host": ["{{base_url}}"],
+              "path": ["api", "report", "company", "comp_001", ""],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "11"
+                },
+                {
+                  "key": "year",
+                  "value": "2023"
+                }
+              ]
+            },
+            "description": "Company spending report for November 2023"
+          }
+        },
+        {
+          "name": "Company Report - December 2023",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/report/company/comp_002/?month=12&year=2023",
+              "host": ["{{base_url}}"],
+              "path": ["api", "report", "company", "comp_002", ""],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "12"
+                },
+                {
+                  "key": "year",
+                  "value": "2023"
+                }
+              ]
+            },
+            "description": "Company spending report for December 2023"
+          }
+        }
+      ],
+      "description": "Comprehensive dashboards and reporting endpoints"
+    },
+    {
+      "name": "6. Test Data Variations",
+      "item": [
+        {
+          "name": "Test All Companies",
+          "item": [
+            {
+              "name": "Company 001 - Active Jobs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/jobs/company/comp_001/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "jobs", "company", "comp_001", ""]
+                }
+              }
+            },
+            {
+              "name": "Company 002 - Active Jobs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/jobs/company/comp_002/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "jobs", "company", "comp_002", ""]
+                }
+              }
+            },
+            {
+              "name": "Company 003 - Active Jobs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/jobs/company/comp_003/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "jobs", "company", "comp_003", ""]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test All Contractors",
+          "item": [
+            {
+              "name": "Contractor 001 - Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/dashboard/contractor/cont_001/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "dashboard", "contractor", "cont_001", ""]
+                }
+              }
+            },
+            {
+              "name": "Contractor 002 - Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/dashboard/contractor/cont_002/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "dashboard", "contractor", "cont_002", ""]
+                }
+              }
+            },
+            {
+              "name": "Contractor 003 - Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/dashboard/contractor/cont_003/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "dashboard", "contractor", "cont_003", ""]
+                }
+              }
+            },
+            {
+              "name": "Contractor 004 - Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/dashboard/contractor/cont_004/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "dashboard", "contractor", "cont_004", ""]
+                }
+              }
+            },
+            {
+              "name": "Contractor 005 - Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/dashboard/contractor/cont_005/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "dashboard", "contractor", "cont_005", ""]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Test requests for all available companies and contractors"
+    }
+  ]
+} 
