@@ -22,51 +22,189 @@ This project implements a comprehensive **Slowly Changing Dimensions (SCD) abstr
 ## 🚀 **Quick Start**
 
 ### Prerequisites
-- Python 3.8+
-- Django 4.2+
+- **Python 3.8+** - [Download Python](https://python.org/downloads/)
+- **Git** - [Download Git](https://git-scm.com/downloads)
 
-### Installation & Setup
+### Complete Installation & Setup
+
+#### **Step 1: Clone and Navigate**
 ```bash
-# 1. Activate virtual environment
+# Clone the repository
+git clone https://github.com/amitdubeyup/scd-work-trial.git
+
+# Navigate to project directory
+cd scd-work-trial
+```
+
+#### **Step 2: Python Environment Setup**
+```bash
+# Check Python version (should be 3.8+)
+python --version
+# or
+python3 --version
+
+# Create virtual environment
+python -m venv venv
+# or on some systems:
+python3 -m venv venv
+```
+
+#### **Step 3: Activate Virtual Environment**
+
+**On macOS/Linux:**
+```bash
 source venv/bin/activate
+```
 
-# 2. Install dependencies
+**On Windows:**
+```cmd
+# Command Prompt
+venv\Scripts\activate
+
+# PowerShell
+venv\Scripts\Activate.ps1
+```
+
+#### **Step 4: Install Dependencies**
+```bash
+# Upgrade pip first
+pip install --upgrade pip
+
+# Install project dependencies
 pip install -r requirements.txt
+```
 
-# 3. Run database migrations
+#### **Step 5: Database Setup**
+```bash
+# Create and setup SQLite database
 python manage.py migrate
 
-# 4. Create sample SCD data (if needed)
+# Create sample SCD data (recommended for testing)
 python manage.py create_sample_data
-
-# 5. Run tests to verify everything works
-python manage.py test scd_app
-
-# 6. Start the development server
-python manage.py runserver
 ```
 
-### ✅ **Verification - Run This Test**
+#### **Step 6: Verify Installation**
 ```bash
-# Test the core SCD functionality
-source venv/bin/activate && python manage.py check
+# Run system check
+python manage.py check
+
+# Run tests to verify everything works
+python manage.py test scd_app
 ```
 
+#### **Step 7: Start the Server**
+```bash
+# Start development server
+python manage.py runserver
+
+# Server will be available at: http://localhost:8000
+```
+
+### ✅ **Verification Tests**
+
+#### **Quick System Check**
+```bash
+python manage.py check
+```
 **Expected Output:**
 ```
 System check identified no issues (0 silenced).
 ```
 
-Or test SCD queries directly:
+#### **Test SCD Functionality**
 ```bash
-source venv/bin/activate && python -c "
+python -c "
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scd_project.settings')
 import django
 django.setup()
 from scd_app.scd_manager import get_latest_jobs
-print(f'SCD System Working: {get_latest_jobs().count()} jobs loaded')
+print(f'✅ SCD System Working: {get_latest_jobs().count()} jobs loaded')
 "
+```
+
+#### **Test API Endpoints**
+```bash
+# Open new terminal and test these URLs:
+curl http://localhost:8000/api/
+curl http://localhost:8000/api/demo/
+curl http://localhost:8000/api/jobs/
+```
+
+### 🛠️ **Troubleshooting**
+
+#### **Common Issues & Solutions**
+
+**Issue: `python` command not found**
+```bash
+# Try using python3 instead
+python3 --version
+python3 -m venv venv
+```
+
+**Issue: Virtual environment activation fails**
+```bash
+# On macOS/Linux, ensure you're in project directory
+pwd  # Should show /path/to/scd-work-trial
+ls   # Should show venv folder
+
+# If venv doesn't exist, create it:
+python -m venv venv
+```
+
+**Issue: Permission denied on macOS/Linux**
+```bash
+# Make activate script executable
+chmod +x venv/bin/activate
+source venv/bin/activate
+```
+
+**Issue: Module not found errors**
+```bash
+# Ensure virtual environment is activated (you should see (venv) in prompt)
+# If not activated:
+source venv/bin/activate  # macOS/Linux
+# or
+venv\Scripts\activate     # Windows
+
+# Reinstall dependencies
+pip install -r requirements.txt
+```
+
+**Issue: Port 8000 already in use**
+```bash
+# Use different port
+python manage.py runserver 8001
+
+# Or find and kill process using port 8000
+lsof -ti:8000 | xargs kill -9  # macOS/Linux
+```
+
+### 📱 **Access the Application**
+
+Once the server is running, you can access:
+
+- **API Overview**: http://localhost:8000/api/
+- **SCD Demo**: http://localhost:8000/api/demo/
+- **All Jobs**: http://localhost:8000/api/jobs/
+- **Company Jobs**: http://localhost:8000/api/jobs/company/comp_001/
+- **Contractor Jobs**: http://localhost:8000/api/jobs/contractor/cont_004/
+
+### 🔄 **Daily Development Workflow**
+
+For subsequent runs after initial setup:
+
+```bash
+# 1. Navigate to project
+cd scd-work-trial
+
+# 2. Activate virtual environment
+source venv/bin/activate  # macOS/Linux
+# or
+venv\Scripts\activate     # Windows
+
+# 3. Start server
+python manage.py runserver
 ```
 
 ## 🏗️ **Architecture Overview**
