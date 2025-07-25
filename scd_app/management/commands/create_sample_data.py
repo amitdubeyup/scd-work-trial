@@ -39,9 +39,18 @@ class Command(BaseCommand):
             default=3,
             help='Average number of versions per SCD record'
         )
+        parser.add_argument(
+            '--clear',
+            action='store_true',
+            help='Clear existing data before creating new data'
+        )
     
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Creating sample SCD data...'))
+        
+        # Clear existing data if requested
+        if options['clear']:
+            self.clear_existing_data()
         
         companies = self.create_companies(options['companies'])
         contractors = self.create_contractors(options['contractors'])
@@ -60,32 +69,55 @@ class Command(BaseCommand):
             )
         )
     
+    def clear_existing_data(self):
+        """Clear all existing sample data"""
+        self.stdout.write('Clearing existing data...')
+        
+        # Delete in order to respect foreign key constraints
+        PaymentLineItem.objects.all().delete()
+        Timelog.objects.all().delete()
+        Job.objects.all().delete()
+        Contractor.objects.all().delete()
+        Company.objects.all().delete()
+        
+        self.stdout.write(self.style.SUCCESS('Existing data cleared'))
+    
     def create_companies(self, count):
         """Create sample companies"""
         companies = []
+        created_count = 0
         for i in range(count):
-            company = Company.objects.create(
+            company, created = Company.objects.get_or_create(
                 id=f"comp_{i+1:03d}",
-                name=f"Company {i+1}",
-                email=f"company{i+1}@example.com"
+                defaults={
+                    'name': f"Company {i+1}",
+                    'email': f"company{i+1}@example.com"
+                }
             )
             companies.append(company)
+            if created:
+                created_count += 1
         
-        self.stdout.write(f'Created {count} companies')
+        self.stdout.write(f'Created {created_count} companies ({count - created_count} already existed)')
         return companies
     
     def create_contractors(self, count):
         """Create sample contractors"""
         contractors = []
+        created_count = 0
         for i in range(count):
-            contractor = Contractor.objects.create(
+            contractor, created = Contractor.objects.get_or_create(
                 id=f"cont_{i+1:03d}",
-                name=f"Contractor {i+1}",
-                email=f"contractor{i+1}@example.com"
+                defaults={
+                    'name': f"Contractor {i+1}",
+                    'email': f"contractor{i+1}@example.com"
+                }
             )
             contractors.append(contractor)
+            if created:
+                created_count += 1
         
-        self.stdout.write(f'Created {count} contractors')
+        self.stdout.write(f'Created {created_count} contractors ({count - created_count} already existed)')
         return contractors
     
     def create_jobs(self, companies, contractors, count, avg_versions):
@@ -107,6 +139,13 @@ class Command(BaseCommand):
             contractor = random.choice(contractors)
             
             business_id = f"job_{i+1:03d}"
+            
+            # Check if job already exists
+            existing_job = job_scd.get_latest_records({'id': business_id}).first()
+            if existing_job:
+                self.stdout.write(f'Job {business_id} already exists, skipping...')
+                jobs.append(business_id)
+                continue
             
             # Create initial version
             job = job_scd.create_record(
@@ -161,6 +200,12 @@ class Command(BaseCommand):
             for t in range(num_timelogs):
                 business_id = f"timelog_{i+1:03d}_{t+1:02d}"
                 
+                # Check if timelog already exists
+                existing_timelog = timelog_scd.get_latest_records({'id': business_id}).first()
+                if existing_timelog:
+                    timelogs.append(business_id)
+                    continue
+                
                 # Random time range in the last 30 days
                 days_ago = random.randint(0, 30)
                 start_time = datetime.now() - timedelta(days=days_ago, hours=random.randint(8, 16))
@@ -214,6 +259,12 @@ class Command(BaseCommand):
         # Create 1-2 payments per timelog
         for i, timelog_business_id in enumerate(timelogs):
             business_id = f"payment_{i+1:04d}"
+            
+            # Check if payment already exists
+            existing_payment = payment_scd.get_latest_records({'id': business_id}).first()
+            if existing_payment:
+                payments.append(business_id)
+                continue
             
             amount = round(random.uniform(50.0, 500.0), 2)
             

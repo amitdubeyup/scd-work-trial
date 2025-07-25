@@ -33,15 +33,37 @@ def index(request):
 def demo_queries(request):
     """Demonstrate the SCD abstraction with example queries"""
     try:
-        results = demonstrate_query_improvements()
+        # Create examples directly without printing
+        examples = SCDQueryExamples()
+        company_id = "comp_demo123"
+        contractor_id = "cont_demo456"
+        
+        # Get the query results
+        old_jobs = examples.get_active_jobs_for_company_old_way(company_id)
+        new_jobs = examples.get_active_jobs_for_company_new_way(company_id)
+        
+        # Get payment line items
+        from datetime import datetime, timedelta
+        start_date = datetime.now() - timedelta(days=30)
+        end_date = datetime.now()
+        payments = examples.get_payment_line_items_for_contractor_optimized(
+            contractor_id, start_date, end_date
+        )
+        
+        # Safely get SQL queries
+        def get_sql_safe(queryset):
+            try:
+                return str(queryset.query)
+            except Exception:
+                return "(empty queryset)"
         
         return JsonResponse({
             'message': 'SCD Query Demonstration',
             'note': 'This shows how the abstraction simplifies complex SCD queries',
             'examples': {
-                'old_jobs_sql': str(results['old_jobs'].query) if 'old_jobs' in results else 'N/A',
-                'new_jobs_sql': str(results['new_jobs'].query) if 'new_jobs' in results else 'N/A',
-                'payments_sql': str(results['payments'].query) if 'payments' in results else 'N/A',
+                'old_jobs_sql': get_sql_safe(old_jobs),
+                'new_jobs_sql': get_sql_safe(new_jobs),
+                'payments_sql': get_sql_safe(payments),
             },
             'benefits': [
                 'Simplified query syntax',

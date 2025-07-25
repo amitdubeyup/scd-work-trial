@@ -38,11 +38,6 @@ class SCDQueryExamples:
         # This is what developers had to write before the abstraction
         from django.db.models import Max
         
-        # Subquery to get latest versions for each job id
-        latest_versions_subquery = Job.objects.filter(
-            id=OuterRef('id')
-        ).aggregate(max_version=Max('version'))['max_version']
-        
         jobs = Job.objects.annotate(
             max_version=Subquery(
                 Job.objects.filter(
@@ -337,11 +332,17 @@ def demonstrate_query_improvements():
     print("1. Getting active jobs for company (old vs new):")
     print("   OLD WAY: Complex subqueries and annotations")
     old_jobs = examples.get_active_jobs_for_company_old_way(company_id)
-    print(f"   Query: {old_jobs.query}")
+    try:
+        print(f"   Query: {old_jobs.query}")
+    except Exception:
+        print("   Query: (empty queryset)")
     
     print("\n   NEW WAY: Simple and clean")
     new_jobs = examples.get_active_jobs_for_company_new_way(company_id)
-    print(f"   Query: {new_jobs.query}")
+    try:
+        print(f"   Query: {new_jobs.query}")
+    except Exception:
+        print("   Query: (empty queryset)")
     
     print("\n" + "="*50 + "\n")
     
@@ -353,7 +354,10 @@ def demonstrate_query_improvements():
     payments = examples.get_payment_line_items_for_contractor_optimized(
         contractor_id, start_date, end_date
     )
-    print(f"   Query: {payments.query}")
+    try:
+        print(f"   Query: {payments.query}")
+    except Exception:
+        print("   Query: (empty queryset)")
     
     return {
         'old_jobs': old_jobs,
