@@ -1,8 +1,8 @@
-# scd-work-trial
+# scd-python-trial
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 
-This project implements a comprehensive **Slowly Changing Dimensions (SCD) abstraction layer** for Django ORM with SQLite, successfully addressing all requirements from the Mercor SCD Work Trial.
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 
 ## 🚀 Tech Stack
 
@@ -16,8 +16,8 @@ This project implements a comprehensive **Slowly Changing Dimensions (SCD) abstr
 
 ```bash
 # Clone the repository
-git clone https://github.com/amitdubeyup/scd-work-trial.git
-cd scd-work-trial
+git clone https://github.com/amitdubeyup/scd-python-trial.git
+cd scd-python-trial
 
 # Install dependencies
 pip install -r requirements.txt
@@ -42,7 +42,7 @@ Update the `.env` file with your configuration values.
 ## 📁 Project Structure
 
 ```
-scd-work-trial/
+scd-python-trial/
 ├── .env.example
 ├── README.md
 ```
